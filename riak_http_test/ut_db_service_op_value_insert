@@ -1,0 +1,28 @@
+#!/usr/bin/env escript
+-define(HOST, "http://127.0.0.1:8081/dbop/").
+
+main(Args) ->
+    [BucketName, KeyName, Value] = Args,
+    ibrowse:start(),
+    Json = mochijson2:encode({struct, [
+				       {bucketname, BucketName},
+				       {keyname, KeyName},
+				       {value, Value}
+				      ]}),
+    Params = base64:encode_to_string(
+	       erlang:list_to_binary(Json)),
+    String = lists:concat([?HOST,
+			   iv,
+			   "/?",
+			   Params]),
+    {Code, Msg} = handle_result(ibrowse:send_req(String, [], get, [])),
+    io:format("return code:~p~n", [Code]),
+    io:format("return message:~p~n", [Msg]).
+handle_result({error, ErrorInfo}) ->
+    io:format("error info:~p~n", [ErrorInfo]);
+
+handle_result({ok, _, _, Body}) ->
+    {struct, [Code1, Msg1]} = mochijson2:decode(Body),
+    {<<"code">>, Code} = Code1,
+    {<<"msg">> , Msg}  = Msg1,
+    {Code, Msg}.

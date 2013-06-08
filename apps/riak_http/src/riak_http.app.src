@@ -1,0 +1,15 @@
+{application, riak_http, [
+	{description, "riak_http for redink."},
+	{vsn, "1"},
+	{modules, []},
+	{registered, []},
+	{applications, [
+		kernel,
+		stdlib,
+		cowboy
+	]},
+	{mod, {riak_http_app, []}},
+	{env, [{riak_host, "127.0.0.1"},
+	       {riak_port, 8087},
+	       {web_port, 8081}]}
+]}.
