@@ -50,7 +50,6 @@ get_best_pid(<<"msg_len">>, PG_Name) ->
     gen_server:call(?MODULE, {<<"msg_len">>, PG_Name}).
 
 init([])->
-    pg2:start_link(),
     Collect_Num = 
 	case application:get_env(riak_http, dp_collect_num) of
 	    undefined ->
@@ -78,7 +77,14 @@ handle_call({<<"msg_len">>, PG_Name}, _, State) ->
 	    _ ->
 		ingore
 	end,
-    [Reply, _] = Reply1,
+    [Reply, _] =
+	case Reply1 of
+	    undefined ->
+		erlang:send(self(), {collect_process_info}),
+		[{no_use, [{no_use, no_use, pg2:get_closest_pid(db_group)}]}, no_use];
+	    _ ->
+		Reply1
+	end,
     {reply, get_random_pid(Reply), State};
 
 handle_call({<<"mem">>, PG_Name}, _, State) ->
@@ -89,7 +95,14 @@ handle_call({<<"mem">>, PG_Name}, _, State) ->
 	    _ ->
 		ingore
 	end,
-    [_, Reply] = Reply1,
+    [_, Reply] = 
+	case Reply1 of
+	    undefined ->
+		erlang:send(self(), {collect_process_info}),
+		[no_use, {no_use, [{no_use, no_use, pg2:get_closest_pid(db_group)}]}];
+	    _ ->
+		Reply1
+	end,
     {reply, get_random_pid(Reply), State};
     
 handle_call(_Request, _From, State) ->

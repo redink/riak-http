@@ -56,7 +56,6 @@ start_link(Args) ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    io:format("swa"),
     case riak_http_pg_master:get_members(db_group) of
 	{error, {no_such_group, _}} ->
 	    riak_http_pg_master:enter_pg(db_group, self());

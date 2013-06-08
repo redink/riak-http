@@ -19,13 +19,14 @@
 
 start(_Type, _Args) ->
     lager:start(),
+    pg2:start_link(),
     application:start(crypto),
     application:start(ranch),
     application:start(cowboy),
 
     ensure_start_db_server(),
     ensure_ping_other_node(),
-
+    
     riak_http_sup:start_link().
 
 
