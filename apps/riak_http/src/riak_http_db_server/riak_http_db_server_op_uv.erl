@@ -49,7 +49,7 @@ handle_db_uv({BucketName, KeyName, Value}) ->
 verify_params(BucketName, KeyName) ->
     case BucketName of
 	"" ->
-	    erlang:throw({"-6", "bucketname can not empty"});
+	    erlang:throw({"-1", "bucketname can not empty"});
 	undefined ->
 	    erlang:throw({"-20", "missing params"});
 	_ ->
@@ -57,7 +57,7 @@ verify_params(BucketName, KeyName) ->
     end,
     case KeyName of
 	"" ->
-	    erlang:throw({"-8", "key can not empty"});
+	    erlang:throw({"-2", "key can not empty"});
 	undefined ->
 	    erlang:throw({"-20", "missing params"});
 	_ ->
@@ -65,11 +65,11 @@ verify_params(BucketName, KeyName) ->
     end,
     case riak_http_db:get_all_buckets() of
 	{ok, []} ->
-	    erlang:throw({"-7", "can not find the bucket"});
+	    erlang:throw({"-3", "can not find the bucket"});
 	{ok, Bucket_List} ->
 	    case lists:member(list_to_binary(BucketName), Bucket_List) of
 		false ->
-		    erlang:throw({"-7", "can not find the bucket"});
+		    erlang:throw({"-3", "can not find the bucket"});
 		_ ->
 		    ok
 	    end
