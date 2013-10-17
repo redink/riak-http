@@ -60,3 +60,6 @@ You can list the ketys in one given bucket via the script of `ut_db_service_op_k
     $ ./ut_db_service_op_key_list <one given bucketname>
 
 The other operation can see in the dir of `riak_http_test`.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/redink/riak-http/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
